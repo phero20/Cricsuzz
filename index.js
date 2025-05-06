@@ -27,8 +27,8 @@ app.get('/api/scores', async (req, res) => {
 // Route 2: Fetch live IPL matches using CricAPI
 app.get('/api/ipl-live', async (req, res) => {
   try {
-    // c56a8ca6-0882-42c3-bc61-e2d39080b026
-    const apiKey = 'cc0adedd-3464-4b43-9087-42125bd95b19';
+   // cc0adedd-3464-4b43-9087-42125bd95b19  
+    const apiKey = 'c56a8ca6-0882-42c3-bc61-e2d39080b026';
     const response = await fetch(`https://api.cricapi.com/v1/cricScore?apikey=${apiKey}`);
     if (!response.ok) {
       console.error(`[BACKEND] CricAPI error: ${response.status}`);
