@@ -27,8 +27,8 @@ app.get('/api/scores', async (req, res) => {
 // Route 2: Fetch live IPL matches using CricAPI
 app.get('/api/ipl-live', async (req, res) => {
   try {
-   // cc0adedd-3464-4b43-9087-42125bd95b19  
-    const apiKey = 'c56a8ca6-0882-42c3-bc61-e2d39080b026';
+    // c56a8ca6-0882-42c3-bc61-e2d39080b026
+    const apiKey = 'cc0adedd-3464-4b43-9087-42125bd95b19';
     const response = await fetch(`https://api.cricapi.com/v1/cricScore?apikey=${apiKey}`);
     if (!response.ok) {
       console.error(`[BACKEND] CricAPI error: ${response.status}`);
@@ -64,6 +64,29 @@ app.get('/api/points-table', async (req, res) => {
     res.status(500).json({ error: 'Error fetching points table data' });
   }
 });
+
+app.get('/api/players', async (req, res) => {
+  try {
+    const teamCodes = ['rcb', 'csk', 'mi', 'srh', 'kkr', 'rr', 'dc', 'pk', 'gt', 'lsg'];
+    const baseUrl = 'https://ipl-okn0.onrender.com/squad/';
+
+    const playerDataPromises = teamCodes.map(async (teamCode) => {
+      const response = await fetch(`${baseUrl}${teamCode}`);
+      if (!response.ok) {
+        console.warn(`[BACKEND] Failed to fetch players for ${teamCode}`);
+        return { team: teamCode.toUpperCase(), players: [], error: true };
+      }
+      const data = await response.json();
+      return { team: teamCode.toUpperCase(), players: data, error: false };
+    });
+    const allPlayers = await Promise.all(playerDataPromises);
+    res.json(allPlayers);
+  } catch (error) {
+    console.error('[BACKEND ERROR] /api/players', error);
+    res.status(500).json({ error: 'Error fetching player data for all teams' });
+  }
+});
+
 
 // Start server
 app.listen(PORT, () => {
