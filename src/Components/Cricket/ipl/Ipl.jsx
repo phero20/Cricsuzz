@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react";
-import logo from "../../assets/iplLogo.svg";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchIplData } from "../../redux/features/apiFetch/apiFetch";
+import React, { memo } from "react";
+import logo from "../../../assets/iplLogo.svg";
 import { NavLink, Outlet } from "react-router-dom";
 
-export default function Ipl() {
-  const tabs = ["MATCHES", "TABLE", "WINNERS", "STATS"];
+const tabs = ["MATCHES", "TABLE", "WINNERS", "PLAYERS"];
 
-  const { pointsTable, loading, error } = useSelector((state) => state.matches);
-      //  console.log(pointsTable)
-
+const Ipl = () => {
   return (
-    <div className="w-screen flex justify-center my-5 mt-24">
+    <div className="w-screen flex justify-center my-5">
       <div className="w-[96%] md:w-9/12 bg-gray-100 dark:bg-gray-950 rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700">
         <div className="w-full bg-blue-900 px-6 pt-3 text-white text-xl font-bold flex flex-col">
           <div className="flex items-center mb-8">
@@ -20,11 +15,12 @@ export default function Ipl() {
             </div>
             <div>
               <p>IPL</p>
-              <p className="text-xs text-gray-300 font-medium">2025</p>
+              <p className="text-xs text-gray-300 font-medium">
+                {new Date().getFullYear()}
+              </p>
             </div>
           </div>
 
-          {/* Tabs with NavLink */}
           <ul className="flex justify-between text-base font-medium pb-1 w-full">
             {tabs.map((tab) => {
               const tabPath = tab.toLowerCase();
@@ -35,7 +31,7 @@ export default function Ipl() {
                     className={({ isActive }) =>
                       ` py-0 cursor-pointer transition-all duration-200 border-b-4 ${
                         isActive
-                          ? "border-gray-100 dark:border-gray-950 text-white"
+                          ? "border-gray-100 dark:border-black text-white"
                           : "border-transparent hover:border-gray-500 text-gray-300 hover:text-white"
                       }`
                     }
@@ -48,26 +44,11 @@ export default function Ipl() {
           </ul>
         </div>
 
-        {/* Child route content */}
         <div className="md:p-6 p-1">
-          {loading ? (
-            <p className="text-center text-gray-500">Loading...</p>
-          ) : error ? (
-            <p className="text-center text-red-500">Error: {error}</p>
-          ) : (
-            <Outlet />
-          )}
+          <Outlet />
         </div>
       </div>
     </div>
   );
-}
-
-
-
-
-
-
-
-
-
+};
+export default memo(Ipl);

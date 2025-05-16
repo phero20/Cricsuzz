@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.13.5",
     "@reduxjs/toolkit": "^2.7.0",
     "chess.js": "^1.2.0",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.507.0",
     "react": "^19.0.0",
     "react-chessboard": "^4.7.3",
