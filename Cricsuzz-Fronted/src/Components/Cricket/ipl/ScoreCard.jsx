@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchMatches,
@@ -10,10 +10,9 @@ import { MonitorPlay } from "lucide-react";
 
 export default function ScoreCard() {
   const dispatch = useDispatch();
-  const [polling, setPolling] = useState(null);
+  const pollingRef = useRef(null);
 
   const { matches, scoreCad } = useSelector((state) => state.matches);
-
 
   useEffect(() => {
     dispatch(fetchMatches());
@@ -109,20 +108,19 @@ export default function ScoreCard() {
       (match) => match.currentStatus?.toLowerCase() === "live"
     );
 
-    if (hasLiveMatch && !polling) {
-      const intervalId = setInterval(() => {
+    if (hasLiveMatch && !pollingRef.current) {
+      pollingRef.current = setInterval(() => {
         dispatch(fetchScoreCad());
       }, 15000);
-      setPolling(intervalId);
-    } else if (!hasLiveMatch && polling) {
-      clearInterval(polling);
-      setPolling(null);
+    } else if (!hasLiveMatch && pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
     }
 
     return () => {
-      if (polling) {
-        clearInterval(polling);
-        setPolling(null);
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
       }
     };
   }, [combinedTodayMatches, dispatch]);
@@ -158,9 +156,8 @@ export default function ScoreCard() {
                     <p className="font-medium px-2">{match.teamOne.name}</p>
                   </div>
 
-                  <div className="font-medium text-xl text-center flex flex-col gap-2">
+                  <div className="font-medium text-sm text-center flex flex-col gap-2">
                     VS
-                    <p className="text-xs font-medium">{match.matchStatus}</p>
                   </div>
 
                   <div className="flex flex-col gap-4 items-end">
@@ -182,7 +179,7 @@ export default function ScoreCard() {
                     </p>
                   </div>
                 </div>
-
+                <p className="text-xs text-center font-medium mb-3">{match.matchStatus}</p>
                 <p className="border-b border-gray-300 dark:border-gray-700 text-sm text-blue-700 pb-1">
                   <span className="text-gray-500 dark:text-gray-400">
                     {match.loc ? `Venue: ` : ""}
