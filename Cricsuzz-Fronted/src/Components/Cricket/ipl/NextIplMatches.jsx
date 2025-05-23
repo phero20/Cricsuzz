@@ -1,50 +1,37 @@
-import React, { useEffect, useState, memo } from "react";
+import React, { useEffect, memo, useMemo } from "react";
 import lsg from "../../../assets/LSG.png";
 import gt from "../../../assets/GT.png";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import logoIpl from "../../../assets/iplLogo.svg";
 import { fetchMatches } from "../../../redux/features/apiFetch/apiFetch";
 import Loading from "./Loading";
+
 const NextIplMatches = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchMatches());
-  }),
-    [dispatch];
+  }, [dispatch]);
 
-  const { matches } = useSelector((state) => state.matches);
-  const [localLoading, setLocalLoading] = useState(true);
+  const { matches } = useSelector((state) => state.matches, shallowEqual);
 
-  useEffect(() => {
-    if (matches && Object.keys(matches).length > 0) {
-      setLocalLoading(false);
-    }
+  const filteredMatches = useMemo(() => {
+    if (!matches || Object.keys(matches).length === 0) return [];
+
+    return Object.values(matches)
+      .filter((match) => match.Date?.toLowerCase() !== "today")
+      .sort((a, b) => {
+        if (a.Date === "tomorrow") return -1;
+        if (b.Date === "tomorrow") return 1;
+        return Date.parse(a.Date) - Date.parse(b.Date);
+      })
+      .map((match) => ({
+        ...match,
+        teams:
+          match.Rival?.split(/\s+/).filter((w) => w.toLowerCase() !== "vs") ||
+          [],
+      }));
   }, [matches]);
-
-  const matchesData = Object.keys(matches).length > 0 ? matches : null;
-
-  const filteredMatches = matchesData
-    ? Object.values(matchesData)
-        .filter((match) => match.Date?.toLowerCase() !== "today")
-        .sort((a, b) => {
-          const dateA = a.Date?.toLowerCase();
-          const dateB = b.Date?.toLowerCase();
-
-          if (dateA === "tomorrow") return -1;
-          if (dateB === "tomorrow") return 1;
-
-          const parsedA = Date.parse(a.Date);
-          const parsedB = Date.parse(b.Date);
-
-          return isNaN(parsedA) || isNaN(parsedB) ? 0 : parsedA - parsedB;
-        })
-        .map((match) => ({
-          ...match,
-          teams:
-            match.Rival?.split(/\s+/).filter((w) => w.toLowerCase() !== "vs") ||
-            [],
-        }))
-    : [];
 
   const teamImageGenerator = (teamName) => {
     const teamLogos = {
@@ -62,7 +49,7 @@ const NextIplMatches = () => {
     return teamLogos[teamName] || logoIpl;
   };
 
-  if (localLoading) {
+  if (!matches || Object.keys(matches).length === 0) {
     return (
       <div className="text-center flex justify-center items-center">
         <Loading />
