@@ -1,13 +1,18 @@
 # 🏏 Cricsuzz — Live Cricket Score, Match Updates & Insights
 <br><br> 
+
+
+   
+🔗 Live Demo: https://cricsuzz.kesug.com
+<br><br>
+
 🏏 Cricsuzz is a dynamic cricket score platform built with React, Redux, and Tailwind CSS, offering real-time updates for IPL, international, domestic, league, and women's cricket matches. Stay informed with live scores, past match results, and player profiles.
 
 This project includes IPL and all other formats, such as international, domestic, women's, and league cricket. It provides live scores, standings, previous IPL winners, and player details for each team. Users can view previous match scores across all formats, while live score updates are fetched every 20-30 seconds. Cricsuzz also features all available teams across formats, including international, women's, domestic, and league cricket. Additionally, it provides player information for both international and IPL formats for each teams. With a responsive UI, the platform automatically switches between dark and light mode based on system settings, offering an interactive experience  
  <br><br> 
-   
-🔗 Live Demo: https://cricsuzz.kesug.com
 
-<br><br>     
+
+     
 
 # 🚀 Features
 
