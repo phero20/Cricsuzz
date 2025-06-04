@@ -5,6 +5,7 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import logoIpl from "../../../assets/iplLogo.svg";
 import { fetchMatches } from "../../../redux/features/apiFetch/apiFetch";
 import Loading from "./Loading";
+import Confetti from "react-confetti";
 
 const NextIplMatches = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,24 @@ const NextIplMatches = () => {
     return teamLogos[teamName] || logoIpl;
   };
 
+  const winners = useSelector((state) => state.images.winners);
+  const winner = winners.find((item) => item.year == new Date().getFullYear());
+
+if (winner != undefined) {
+  return (
+    <div className="w-full flex flex-col items-center gap-1 p-4" style={{ position: "relative" }}>
+      <Confetti /> 
+      <h1 className="text-lg font-bold dark:text-white my-5">WINNER {winner.year}</h1>
+      <img src={winner.image_url} alt="" className="w-20" />
+      <div className="mt-5 text-center">
+        <p className="text-lg font-bold dark:text-white">{winner.team}</p>
+        <p className="text-sm text-gray-500">against {winner.rival}</p>
+      </div>
+    </div>
+  );
+}
+
+  
   if (!matches || Object.keys(matches).length === 0) {
     return (
       <div className="text-center flex justify-center items-center">
