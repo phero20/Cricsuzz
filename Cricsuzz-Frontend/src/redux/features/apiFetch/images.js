@@ -3435,6 +3435,12 @@ const initialState = {
       rival: "Sunrisers Hyderabad",
       image_url: "https://assets.ccbp.in/frontend/react-js/kkr-logo-img.png",
     },
+     {
+      year: 2025,
+      team: "Royal Challengers Bangalore",
+      rival: "Punjab Kings",
+      image_url: "https://assets.ccbp.in/frontend/react-js/rcb-logo-img.png",
+    },
   ],
   domestic: {
     status: "success",
